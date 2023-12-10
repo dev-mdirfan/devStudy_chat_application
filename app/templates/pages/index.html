@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load mathfilters %}
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+
+
+<div class="row gy-4">
+    <div class="col-lg-8 d-flex mb-3">
+        <div>
+            <h5 class="h5">Study Room</h5>
+            <span class="text-muted">10 Rooms Available</span>
+        </div>
+        <div class="ms-auto me-3">
+            <button type="button" class="btn btn-primary">
+                <span class="tf-icons mdi mdi-plus me-1"></span>Create Room
+            </button>
+        </div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-lg-8">
+            {% for room in rooms %}
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img class="card-img card-img-left" src="{% static 'assets/img/elements/12.jpg' %}"
+                            alt="Card image" />
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-header header-elements">
+                            <a href="{% url 'profile' room.host.profile.id %}">
+                                <div class="avatar me-2 avatar-online">
+                                    <img src="{{ room.host.profile.avatar.url }}" alt="Avatar"
+                                        class="rounded-circle" />
+                                </div>
+                            </a>
+                            <a href="{% url 'profile' room.host.profile.id %}">
+                                <span class="fw-semibold d-block text-primary">@{{ room.host.username }}</span>
+                            </a>
+                            <div class="card-header-elements ms-auto">
+                                <p class="card-text">
+                                    <small class="fw-semibold d-block">
+                                        Last updated {{ room.updated|timesince }} ago
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                <a href="{% url 'room' room.id %}" class="card-link text-capitalize">{{ room.name }}</a>
+                            </h3>
+                            <p class="card-text">
+                                {{ room.short_description }}
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex avatar-group align-items-center">
+                                {% if room.participants.count == 1 %}
+                                <div class="avatar">
+                                    <img src="{{ room.host.profile.avatar.url }}" alt="Avatar"
+                                        class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                        title="{{ room.participants.count }} Joined"/>
+                                </div>
+                                {% elif room.participants.count == 2 %}
+                                <div class="avatar">
+                                    <img src="{{ room.participants.all.0.profile.avatar.url }}" alt="Avatar"
+                                        class="rounded-circle" />
+                                </div>
+                                <div class="avatar">
+                                    <img src="{{ room.participants.all.1.profile.avatar.url }}" alt="Avatar"
+                                        class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                        title="{{ room.participants.count }} Joined"/>
+                                </div>
+                                {% elif room.participants.count == 3 %}
+                                <div class="avatar">
+                                    <img src="{{ room.participants.all.0.profile.avatar.url }}" alt="Avatar"
+                                        class="rounded-circle" />
+                                </div>
+                                <div class="avatar">
+                                    <img src="{{ room.participants.all.1.profile.avatar.url }}" alt="Avatar"
+                                        class="rounded-circle" />
+                                </div>
+                                <div class="avatar">
+                                    <img src="{{ room.participants.all.2.profile.avatar.url }}" alt="Avatar"
+                                        class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                        title="{{ room.participants.count }} Joined"/>
+                                </div>
+                                {% else %}
+                                <div class="avatar">
+                                    <img src="{{ room.participants.all.0.profile.avatar.url }}" alt="Avatar"
+                                        class="rounded-circle" />
+                                </div>
+                                <div class="avatar">
+                                    <img src="{{ room.participants.all.1.profile.avatar.url }}" alt="Avatar"
+                                        class="rounded-circle" />
+                                </div>
+                                <div class="avatar">
+                                    <img src="{{ room.participants.all.2.profile.avatar.url }}" alt="Avatar"
+                                        class="rounded-circle" />
+                                </div>
+                                <div class="avatar">
+                                    <span class="avatar-initial rounded-circle bg-lighter text-body" 
+                                    data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                    title="{{ room.participants.count }} Joined">
+                                    +{{ room.participants.count|sub:3 }}
+                                    </span>
+                                </div>
+                                {% endif %}
+                                <div class="text-capitalize ms-auto">
+                                    <span class="badge rounded-pill bg-primary py-2 px-3">Python</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
